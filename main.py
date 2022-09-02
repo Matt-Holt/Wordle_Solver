@@ -23,7 +23,6 @@ submit_button = driver.find_element(By.XPATH, '//*[@id="wordle-app-game"]/div[2]
 rows = driver.find_elements(By.CLASS_NAME, "Row-module_row__dEHfN")
 row = 0
 next_input = "audio"
-incorrect_letters = []
 
 
 def get_row():
@@ -41,7 +40,6 @@ def get_row():
             result += "Y"
         else:
             result += "-"
-            incorrect_letters.append(x.text.lower())
 
     row += 1
     return result
@@ -62,11 +60,12 @@ def input_word(word):
     time.sleep(2)
     result = get_row()
     global next_input
-    next_input = random.choice(wordle.get_relevant_words(result, word))
+    words = wordle.get_relevant_words(result, word)
+
+    if len(words):
+        next_input = random.choice(words)
 
 
 while row < len(rows):
     input_word(next_input)
-
-print(incorrect_letters)
 
